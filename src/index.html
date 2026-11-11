@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Doodle Stroke</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 12px 0; min-height: 100vh; background: #e9ecec; font: 15px system-ui, sans-serif; color: #1f2f33;
+         display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+         --w: min(800px, calc(100vw - 24px), calc((100vh - 120px) * 4 / 3)); }
+  .bar, .wrap, .st { width: var(--w); }
+  .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .bar b, button { white-space: nowrap; }
+  @media (max-width: 1100px) { .bar { gap: 6px; } .bar button { padding: 6px 9px; font-size: 14px; } }
+  .bar b { font-size: 17px; margin-right: auto; background: #e9ececeb; padding: 2px 8px; border-radius: 6px; }
+  button { font: inherit; padding: 7px 14px; border: 1px solid #9aa7ab; background: #fff; color: #1f2f33; border-radius: 6px; cursor: pointer; }
+  button.p { background: #1f2f33; color: #fff; border-color: #1f2f33; }
+  kbd { font: 12px monospace; background: #e3e7e8; color: #1f2f33; border-radius: 3px; padding: 1px 5px; margin-left: 6px; }
+  #hint small { margin-top: 10px; font-size: 13px; }
+  .wrap { position: relative; box-shadow: 0 0 0 1px #c9cfd1, 0 6px 20px #0002; }
+  #pad { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; background: #fff; touch-action: none; cursor: crosshair; }
+  #hint { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; color: #6b7a7e; line-height: 1.7; pointer-events: none; }
+  #hint[hidden] { display: none; }
+  #hint big { font-size: 20px; color: #4d5d61; }
+  .st { color: #4d5d61; font-size: 13px; min-height: 1.4em; }
+  .st:not(:empty) { background: #e9ececeb; padding: 2px 8px; border-radius: 6px; width: auto; }
+  #panel { position: fixed; top: 0; right: 0; bottom: 0; width: 300px; overflow-y: auto; background: #fff; box-shadow: -6px 0 20px #0002; padding: 14px; }
+  #panel h2 { font-size: 17px; margin: 0 0 10px; }
+  #panel .tools { display: flex; gap: 6px; margin-bottom: 12px; }
+  #lib { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  #lib li { border: 1px solid #c9cfd1; border-radius: 6px; padding: 8px; }
+  #lib img { display: block; width: 100%; aspect-ratio: 4 / 3; border: 1px solid #e3e7e8; }
+  #lib .name { font-size: 13px; margin: 6px 0; }
+  #lib li > div { display: flex; gap: 6px; }
+  #lib li button { font-size: 13px; padding: 4px 8px; }
+</style>
+</head>
+<body>
+<div class="bar">
+  <b>Doodle Stroke</b>
+  <button id="store" class="p" type="button" title="Ctrl+S">보관함에 저장</button>
+  <button id="save" type="button">PNG 저장</button>
+  <button id="undo" type="button" title="Ctrl+Z">되돌리기</button>
+  <button id="clear" type="button" title="Delete">지우기</button>
+  <button id="libbtn" type="button" aria-expanded="false" aria-controls="panel">보관함 열기</button>
+</div>
+<div class="wrap">
+  <canvas id="pad" width="800" height="600" data-done="0"></canvas>
+  <div id="hint"><big>여기에 그려 보세요</big>손을 떼면 손으로 덧그은 선으로 바뀝니다<small><kbd>Ctrl+S</kbd> 보관함에 저장 · <kbd>Ctrl+Z</kbd> 되돌리기 · <kbd>Del</kbd> 지우기</small></div>
+</div>
+<div id="status" class="st" aria-live="polite"></div>
+<aside id="panel" aria-label="보관함" hidden>
+  <h2>보관함</h2>
+  <div class="tools">
+    <button id="export" type="button">내보내기</button>
+    <button id="importbtn" type="button">가져오기</button>
+    <input id="import" type="file" accept=".json,application/json" hidden>
+  </div>
+  <ul id="lib"></ul>
+</aside>
+<script src="doodle.js"></script>
+<script src="render.js"></script>
+<script src="backdrop.js"></script>
+<script src="library.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
